@@ -1,0 +1,17 @@
+fastapi
+uvicorn[standard]
+celery
+redis
+sqlalchemy
+alembic
+pydantic
+pydantic-settings
+python-multipart
+pillow
+opencv-python
+requests
+aiofiles
+python-jose[cryptography]
+passlib[bcrypt]
+python-dotenv
+aiosqlite
