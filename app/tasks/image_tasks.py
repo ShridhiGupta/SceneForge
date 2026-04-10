@@ -3,8 +3,14 @@ from app.celery_app import celery_app
 from app.core.database import SessionLocal
 from app.models.video import Video, Scene, VideoStatus, TaskStatus
 from app.services.image_service import ImageGenerationService
+from app.services.quality_evaluation import quality_evaluator
+from app.utils.task_utils import with_failure_handling, TaskFailureHandler
+from app.schemas.decision_engine import PipelineStage
 import os
 import uuid
+import logging
+
+logger = logging.getLogger(__name__)
 
 @celery_app.task(bind=True, max_retries=3)
 def generate_scene_images(self, video_id: int):
@@ -60,7 +66,8 @@ def generate_scene_images(self, video_id: int):
     finally:
         db.close()
 
-@celery_app.task(bind=True, max_retries=3)
+@celery_app.task(bind=True, max_retries=5)
+@with_failure_handling(PipelineStage.IMAGE)
 def generate_single_image(self, scene_id: int):
     """
     Generate a single image for a scene
@@ -74,6 +81,7 @@ def generate_single_image(self, scene_id: int):
         # Update scene status
         scene.image_generation_status = TaskStatus.PROCESSING
         scene.image_generation_task_id = self.request.id
+        scene.retry_count = self.request.retries
         db.commit()
         
         # Generate image using AI service
@@ -86,11 +94,49 @@ def generate_single_image(self, scene_id: int):
         # Ensure directory exists
         os.makedirs(os.path.dirname(image_path), exist_ok=True)
         
-        # Generate the image
+        # Generate the image with current context
         image_service.generate_image(
             prompt=scene.description,
-            output_path=image_path
+            output_path=image_path,
+            model_name="stable-diffusion-xl",  # This would come from config
+            task_id=self.request.id
         )
+        
+        # Evaluate image quality
+        quality_result = None
+        try:
+            quality_result = quality_evaluator.quick_evaluate(
+                image_path=image_path,
+                prompt=scene.description,
+                threshold=0.5  # Configurable threshold
+            )
+            
+            # Update scene with quality score
+            scene.quality_score = quality_result.final_score
+            
+            logger.info(f"Image quality evaluation: {quality_result.final_score:.2f}")
+            
+            # Check if quality passes threshold
+            if not quality_result.passes_threshold:
+                # Trigger low quality failure
+                quality_error = f"Image quality score {quality_result.final_score:.2f} below threshold 0.5"
+                logger.warning(quality_error)
+                
+                # Update scene status to failed
+                scene.image_generation_status = TaskStatus.FAILED
+                scene.error_message = quality_error
+                db.commit()
+                
+                # Raise exception to trigger decision engine
+                raise Exception(quality_error)
+            
+        except Exception as e:
+            logger.warning(f"Quality evaluation failed: {e}")
+            scene.quality_score = 0.0
+            
+            # If this is a quality failure, re-raise to trigger decision engine
+            if "quality score" in str(e).lower():
+                raise e
         
         # Update scene with image path
         scene.image_path = image_path
@@ -99,11 +145,5 @@ def generate_single_image(self, scene_id: int):
         
         return scene_id
         
-    except Exception as exc:
-        # Update scene status to failed
-        scene.image_generation_status = TaskStatus.FAILED
-        scene.error_message = str(exc)
-        db.commit()
-        raise self.retry(exc=exc, countdown=60)
     finally:
         db.close()

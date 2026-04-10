@@ -12,6 +12,11 @@ class Settings(BaseSettings):
     openai_api_key: Optional[str] = None
     stability_api_key: Optional[str] = None
     
+    # Decision Engine Configuration
+    decision_engine_enabled: bool = True
+    decision_engine_min_retries: int = 1
+    decision_engine_confidence_threshold: float = 0.7
+    
     # File Storage
     upload_dir: str = "./uploads"
     max_file_size: str = "100MB"

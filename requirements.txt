@@ -15,3 +15,11 @@ python-jose[cryptography]
 passlib[bcrypt]
 python-dotenv
 aiosqlite
+openai
+faiss-cpu
+numpy
+torch
+clip-by-openai
+transformers
+langgraph
+langchain

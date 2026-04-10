@@ -1,0 +1,219 @@
+Multi-Agent Architecture Diagram
+===============================
+
+                           +-------------------------+
+                           |   Multi-Agent Workflow   |
+                           |      (LangGraph)         |
+                           +-------------------------+
+                                      |
+                                      v
++------------------+     +-----------------+     +------------------+
+|   Scene Agent    | --> | Image Gen Agent | --> | Quality Agent    |
+|                  |     |                  |     |                  |
+| - Parse Scripts  |     | - Select Models  |     | - CLIP Scoring   |
+| - Generate Prompts|     | - Generate Images|     | - LLM Evaluation |
+| - Estimate Durations|    | - Handle Retries |     | - Quality Threshold|
+| - Scene Ordering |     | - Cost Tracking  |     | - Trigger Decisions|
++------------------+     +-----------------+     +------------------+
+         |                       |                       |
+         |                       v                       |
+         |              +-----------------+               |
+         |              |  RAG Memory      |<--------------+
+         |              |                  |               |
+         |              | - Vector Store   |               |
+         |              | - Similar Failures|               |
+         |              | - Pattern Learning|               |
+         |              +-----------------+               |
+         |                       |                       |
+         v                       v                       v
++------------------+     +-----------------+     +------------------+
+| Decision Agent   |<----| Cost Opt Agent  |<----|  Error Handler   |
+|                  |     |                  |     |                  |
+| - LLM Decisions  |     | - Cost Analysis  |     | - Error Logging  |
+| - RAG Integration|     | - Optimization   |     | - Retry Logic    |
+| - Recovery Actions|     | - Budget Tracking|     | - Escalation     |
+| - Retry Coordination|    | - Recommendations|     | - Graceful Degradation|
++------------------+     +-----------------+     +------------------+
+         |                       |                       |
+         |                       |                       |
+         v                       v                       v
++------------------+     +-----------------+     +------------------+
+|   Completion     |<----|  Database       |<----|  Pipeline End   |
+|                  |     |                  |     |                  |
+| - Status Update  |     | - Save Results   |     | - Final Summary  |
+| - Cost Summary   |     | - Update Progress|     | - Statistics     |
+| - Statistics     |     | - Error Logging  |     | - Cleanup        |
++------------------+     +-----------------+     +------------------+
+
+State Flow Diagram
+=================
+
+Initial State
+    |
+    v
+[Scene Processing]
+    |  Parse script into scenes
+    |  Generate prompts
+    v
+[Image Generation]
+    |  Select optimal model
+    |  Generate images with retries
+    v
+[Quality Evaluation]
+    |  CLIP scoring
+    |  LLM evaluation
+    |  Combined quality score
+    v
+[Decision Point]
+    |
+    +-- Quality OK? --> [Cost Optimization] --> [Completion]
+    |
+    +-- Quality Low? --> [Decision Agent]
+    |                     |
+    |                     v
+    |               [Analyze with RAG]
+    |                     |
+    |                     v
+    |               [Choose Action]
+    |                     |
+    |   +---------------+----------------+----------------+
+    |   |               |                |                |
+    |   v               v                v                v
+    | [Retry] [Modify Prompt] [Switch Model] [Adjust Parameters]
+    |   |               |                |                |
+    +---+---------------+----------------+----------------+
+    |
+    v
+[Back to Image Generation] (loop until quality OK or max retries)
+
+Agent Communication Flow
+=======================
+
+Scene Agent --> Image Generation Agent
+    Message: "scenes_ready"
+    Content: {scene_count, video_id}
+
+Image Generation Agent --> Quality Evaluation Agent
+    Message: "image_generated"
+    Content: {scene_id, image_path, prompt}
+
+Quality Evaluation Agent --> Decision Agent
+    Message: "handle_low_quality"
+    Content: {scene_id, quality_score, reasoning}
+
+Decision Agent --> Image Generation Agent
+    Message: "retry_with_changes"
+    Content: {new_prompt, new_model, parameter_changes}
+
+Cost Optimization Agent --> Decision Agent
+    Message: "cost_optimization_recommendations"
+    Content: {potential_savings, recommended_model}
+
+Decision Agent --> Error Handler
+    Message: "escalate_error"
+    Content: {error_context, retry_count}
+
+Retry Loop Logic
+===============
+
+1. Quality Failure Detected
+   |
+   v
+2. Decision Agent Analyzes
+   |
+   v
+3. RAG Memory Search
+   |
+   v
+4. LLM Decision (with context)
+   |
+   v
+5. Execute Action
+   |
+   v
+6. Update State
+   |
+   v
+7. Check Retry Count
+   |
+   +-- < Max Retries --> Loop Back
+   |
+   +-- >= Max Retries --> Fail Pipeline
+
+Error Handling Flow
+==================
+
+Agent Error
+    |
+    v
+[Error Handler]
+    |
+    +-- Retry Available --> [Decision Agent] --> Retry Loop
+    |
+    +-- No More Retries --> [Pipeline End] --> Failed State
+    |
+    +-- Critical Error --> [Escalate Resources] --> Continue
+
+Cost Optimization Flow
+======================
+
+[Quality Evaluation Complete]
+    |
+    v
+[Cost Analysis]
+    |
+    +-- Within Budget --> Continue
+    |
+    +-- Over Budget --> [Cost Optimization Agent]
+    |                     |
+    |                     v
+    |               [Analyze Costs]
+    |                     |
+    |                     v
+    |               [Generate Recommendations]
+    |                     |
+    |                     v
+    |               [Send to Decision Agent]
+    |
+    +-- Decision Made --> Apply Changes --> Continue
+
+State Persistence
+================
+
+- LangGraph CheckpointSaver
+- Memory-based state persistence
+- Agent communication history
+- Decision tracking
+- Cost accumulation
+- Error history
+
+Parallel Execution Possibilities
+==============================
+
+1. Multiple Scene Processing (if independent)
+2. Parallel Image Generation (different scenes)
+3. Parallel Quality Evaluation (independent images)
+4. Concurrent Cost Analysis (with quality evaluation)
+
+Resource Allocation
+==================
+
+CPU-Intensive Agents:
+- Scene Agent (script parsing)
+- Decision Agent (LLM processing)
+- Cost Optimization Agent (analysis)
+
+GPU-Intensive Agents:
+- Image Generation Agent (AI models)
+- Quality Evaluation Agent (CLIP)
+
+Network-Intensive Agents:
+- Decision Agent (OpenAI API)
+- Quality Evaluation Agent (GPT-4 Vision)
+
+Memory Requirements:
+- Scene Agent: Low (script data)
+- Image Generation Agent: Medium (image buffers)
+- Quality Evaluation Agent: Medium (model loading)
+- Decision Agent: Medium (LLM context)
+- Cost Optimization Agent: Low (analysis data)

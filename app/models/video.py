@@ -21,6 +21,7 @@ class TaskStatus(enum.Enum):
     COMPLETED = "completed"
     FAILED = "failed"
     RETRYING = "retrying"
+    SKIPPED = "skipped"
 
 class Video(Base):
     __tablename__ = "videos"
@@ -51,6 +52,10 @@ class Scene(Base):
     image_path = Column(String, nullable=True)
     image_generation_status = Column(Enum(TaskStatus), default=TaskStatus.PENDING)
     image_generation_task_id = Column(String, nullable=True)
+    retry_count = Column(Integer, default=0)
+    generation_cost = Column(Float, default=0.0)
+    model_used = Column(String, nullable=True)
+    quality_score = Column(Float, default=0.0)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     error_message = Column(Text, nullable=True)
