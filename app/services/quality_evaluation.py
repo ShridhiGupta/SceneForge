@@ -10,7 +10,7 @@ from app.schemas.quality_evaluation import (
     EvaluationMethod,
     QualityFailure
 )
-from app.services.clip_evaluation import clip_evaluator
+from app.services.clip_evaluation_mock import clip_evaluator
 from app.services.llm_evaluation import llm_evaluator
 from app.services.decision_executor import decision_executor
 from app.schemas.decision_engine import FailureContext, PipelineStage, FailureType

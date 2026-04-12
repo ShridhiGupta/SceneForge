@@ -5,7 +5,7 @@ from app.schemas.quality_evaluation import (
     QualityMetrics
 )
 from app.services.quality_evaluation import quality_evaluator
-from app.services.clip_evaluation import clip_evaluator
+from app.services.clip_evaluation_mock import clip_evaluator
 from app.services.llm_evaluation import llm_evaluator
 from typing import Optional
 import os

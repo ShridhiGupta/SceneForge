@@ -1,7 +1,7 @@
 from app.celery_app import celery_app
 from app.core.database import SessionLocal
 from app.models.video import Video, Clip, VideoStatus, TaskStatus
-from app.services.render_service import RenderService
+from app.services.render_service_mock import RenderService
 import os
 import uuid
 

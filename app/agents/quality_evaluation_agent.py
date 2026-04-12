@@ -12,7 +12,7 @@ from app.agents.state_schema import (
     QualityLevel
 )
 from app.services.quality_evaluation import quality_evaluator
-from app.services.clip_evaluation import clip_evaluator
+from app.services.clip_evaluation_mock import clip_evaluator
 from app.services.llm_evaluation import llm_evaluator
 
 logger = logging.getLogger(__name__)

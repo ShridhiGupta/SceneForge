@@ -24,7 +24,13 @@ class CostQualityOptimizer:
     
     def __init__(self):
         self.model_profiles = self._initialize_model_profiles()
-        self.default_utility_params = UtilityParameters()
+        self.default_utility_params = UtilityParameters(
+            alpha=0.7,
+            beta=0.3,
+            cost_sensitivity=1.0,
+            quality_threshold=0.5,
+            budget_limit=None
+        )
         
     def _initialize_model_profiles(self) -> Dict[str, ModelCostProfile]:
         """Initialize model cost and quality profiles"""
@@ -37,6 +43,7 @@ class CostQualityOptimizer:
                 expected_quality=0.65,
                 speed_tier="fast",
                 reliability=0.95,
+                context_window=4096,
                 specializations=["basic_images", "speed"]
             ),
             
@@ -47,6 +54,7 @@ class CostQualityOptimizer:
                 expected_quality=0.78,
                 speed_tier="medium",
                 reliability=0.92,
+                context_window=8192,
                 specializations=["quality_images", "detail"]
             ),
             
@@ -57,6 +65,7 @@ class CostQualityOptimizer:
                 expected_quality=0.85,
                 speed_tier="slow",
                 reliability=0.98,
+                context_window=4096,
                 specializations=["high_quality", "creative", "complex_prompts"]
             ),
             
@@ -67,6 +76,7 @@ class CostQualityOptimizer:
                 expected_quality=0.92,
                 speed_tier="very_slow",
                 reliability=0.90,
+                context_window=4096,
                 specializations=["artistic", "high_quality", "style_transfer"]
             ),
             

@@ -32,6 +32,14 @@ class QualityLevel(str, Enum):
     VERY_HIGH = "very_high"
 
 
+class FailureType(str, Enum):
+    TIMEOUT = "timeout"
+    API_ERROR = "api_error"
+    LOW_QUALITY = "low_quality"
+    RESOURCE_EXHAUSTION = "resource_exhaustion"
+    UNKNOWN = "unknown"
+
+
 class DecisionAction(str, Enum):
     RETRY = "retry"
     MODIFY_PROMPT = "modify_prompt"

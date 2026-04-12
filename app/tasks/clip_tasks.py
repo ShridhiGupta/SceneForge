@@ -2,7 +2,7 @@ from celery import group
 from app.celery_app import celery_app
 from app.core.database import SessionLocal
 from app.models.video import Video, Scene, Clip, VideoStatus, TaskStatus
-from app.services.clip_service import ClipGenerationService
+from app.services.clip_service_mock import ClipGenerationService
 import os
 import uuid
 
