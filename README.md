@@ -2,7 +2,7 @@
 
 A distributed, long-running, failure-prone, media-heavy AI workflow system for generating videos from user scripts using a pipeline-based approach: scene → image → clip → final render.
 
-## 🚀 Features
+## 🚀Features
 
 - **Distributed Architecture**: Built with FastAPI, Celery, and Redis for scalable video processing
 - **AI-Powered**: Generates images from text descriptions using AI services
@@ -312,5 +312,6 @@ For support and questions:
 - Create an issue on GitHub
 - Check the documentation
 - Review the troubleshooting section
-#   S c e n e F o r g e  
+#   S c e n e F o r g e 
+ 
  
