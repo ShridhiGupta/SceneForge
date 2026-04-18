@@ -145,69 +145,89 @@ OPENAI_API_KEY=optional
 STABILITY_API_KEY=optional
 ```
 ### API Endpoints
-Authentication
+#### Authentication
+```bash
 POST /api/v1/auth/token
-Videos
+```
+#### Videos
+```bash
 GET /api/v1/videos
 POST /api/v1/videos
 GET /api/v1/videos/{id}
 DELETE /api/v1/videos/{id}
-Monitoring
-Celery
+```
+### Monitoring
+#### Celery
+```bash
 docker-compose exec celery-worker celery -A app.celery_app inspect active
 docker-compose exec celery-worker celery -A app.celery_app inspect stats
-Database
+```
+#### Database
+```bash
 docker-compose exec db psql -U sceneforge -d sceneforge
-Development
-Backend
+```
+### Development
+#### Backend
+```bash
 cd app
 python -m venv venv
 source venv/bin/activate   # On Windows: venv\Scripts\activate
 pip install -r ../requirements.txt
 uvicorn main:app --reload
-Frontend
+```
+#### Frontend
+```bash
 cd frontend
 npm install
 npm start
-Run Worker
+```
+#### Run Worker
+```bash
 cd app
 celery -A celery_app worker --loglevel=info
-Database Migrations
+```
+#### Database Migrations
+```bash
 alembic revision --autogenerate -m "message"
 alembic upgrade head
 alembic downgrade -1
-Deployment Considerations
-Use HTTPS
-Configure reverse proxy (Nginx)
-Enable logging and monitoring
-Store media in cloud storage (S3 or GCS)
-Use CDN for video delivery
-Set up automated backups
-Scaling Strategy
-Add more Celery workers for parallel processing
-Use database read replicas for scaling reads
-Offload media storage to cloud object storage
-Introduce task prioritization queues if needed
-Security
-Store secrets in environment variables
-Validate all user inputs
-Implement authentication and authorization
-Restrict file uploads and size limits
-Regularly update dependencies
-Common Issues
-Celery not processing tasks
-Ensure Redis is running
-Check worker logs
-Database connection issues
-Verify DATABASE_URL
-Ensure PostgreSQL container is running
-Frontend not connecting
-Check API base URL
-Verify CORS settings
-Logs
+```
+#### Deployment Considerations
+- Use HTTPS
+- Configure reverse proxy (Nginx)
+- Enable logging and monitoring
+- Store media in cloud storage (S3 or GCS)
+- Use CDN for video delivery
+- Set up automated backups
+- Scaling Strategy
+- Add more Celery workers for parallel processing
+- Use database read replicas for scaling reads
+- Offload media storage to cloud object storage
+- Introduce task prioritization queues if needed
+- 
+#### Security
+- Store secrets in environment variables
+- Validate all user inputs
+- Implement authentication and authorization
+- Restrict file uploads and size limits
+- Regularly update dependencies
+- Common Issues
+- Celery not processing tasks
+- Ensure Redis is running
+- Check worker logs
+- Database connection issues
+- Verify DATABASE_URL
+- Ensure PostgreSQL container is running
+- Frontend not connecting
+- Check API base URL
+- Verify CORS settings
+- 
+#### Logs
+```bash
 docker-compose logs -f backend
 docker-compose logs -f celery-worker
 docker-compose logs -f frontend
+```
 License
 
-MIT License
+# MIT License
