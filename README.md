@@ -112,20 +112,25 @@ sceneforge/
 git clone <repository-url>
 cd sceneforge
 cp .env.example .env
+```
 
 Update .env with required configuration.
 
-Run the System
+### Run the System
+```bash
 docker-compose up -d
-Initialize Database
+```
+### Initialize Database
+```bash
 docker-compose exec backend alembic upgrade head
-Access Services
+```
+### Access Services
 Frontend: http://localhost:3000
 Backend API: http://localhost:8000
 API Docs: http://localhost:8000/docs
-Environment Variables
+### Environment Variables
+```bash
 DATABASE_URL=postgresql://user:password@localhost:5432/sceneforge
-
 REDIS_URL=redis://localhost:6379/0
 CELERY_BROKER_URL=redis://localhost:6379/0
 CELERY_RESULT_BACKEND=redis://localhost:6379/0
@@ -138,7 +143,8 @@ MAX_FILE_SIZE=100MB
 
 OPENAI_API_KEY=optional
 STABILITY_API_KEY=optional
-API Endpoints
+```
+### API Endpoints
 Authentication
 POST /api/v1/auth/token
 Videos
