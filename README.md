@@ -2,7 +2,7 @@
 
 A distributed, long-running, failure-prone, media-heavy AI workflow system for generating videos from user scripts using a pipeline-based approach: scene → image → clip → final render.
 
-## 🚀Features
+## Features
 
 - **Distributed Architecture**: Built with FastAPI, Celery, and Redis for scalable video processing
 - **AI-Powered**: Generates images from text descriptions using AI services
@@ -13,7 +13,7 @@ A distributed, long-running, failure-prone, media-heavy AI workflow system for g
 - **PostgreSQL**: Reliable data storage with comprehensive models
 - **Docker Support**: Easy deployment with containerization
 
-## 🏗️ Architecture
+## Architecture
 
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
@@ -28,7 +28,7 @@ A distributed, long-running, failure-prone, media-heavy AI workflow system for g
                        └─────────────────┘    └─────────────────┘
 ```
 
-## 📋 Workflow
+## Workflow
 
 1. **User submits script** → Creates video record
 2. **Scene parsing** → Splits script into individual scenes
@@ -37,7 +37,7 @@ A distributed, long-running, failure-prone, media-heavy AI workflow system for g
 5. **Final rendering** → Combines clips into final video
 6. **Asset management** → Tracks and manages all media files
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 ### Backend
 - **FastAPI**: Modern, fast web framework for building APIs
@@ -60,7 +60,7 @@ A distributed, long-running, failure-prone, media-heavy AI workflow system for g
 - **Docker**: Containerization
 - **Docker Compose**: Multi-container orchestration
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 - Docker and Docker Compose
@@ -96,7 +96,7 @@ A distributed, long-running, failure-prone, media-heavy AI workflow system for g
    - Backend API: http://localhost:8000
    - API Documentation: http://localhost:8000/docs
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 sceneforge/
@@ -138,7 +138,7 @@ sceneforge/
 └── requirements.txt             # Python dependencies
 ```
 
-## 🔧 Configuration
+## Configuration
 
 ### Environment Variables
 
@@ -167,7 +167,7 @@ UPLOAD_DIR=./uploads
 MAX_FILE_SIZE=100MB
 ```
 
-## 📊 API Endpoints
+## API Endpoints
 
 ### Authentication
 - `POST /api/v1/auth/token` - Login and get access token
@@ -182,7 +182,7 @@ MAX_FILE_SIZE=100MB
 - `GET /docs` - Interactive API documentation (Swagger)
 - `GET /redoc` - Alternative API documentation
 
-## 🔍 Monitoring
+## Monitoring
 
 ### Celery Monitoring
 ```bash
@@ -199,7 +199,7 @@ docker-compose exec celery-worker celery -A app.celery_app inspect stats
 docker-compose exec db psql -U sceneforge -d sceneforge
 ```
 
-## 🧪 Development
+## Development
 
 ### Running Locally
 
@@ -238,7 +238,7 @@ alembic upgrade head
 alembic downgrade -1
 ```
 
-## 🔒 Security Considerations
+## Security Considerations
 
 - Change default passwords and secrets in production
 - Use HTTPS in production
@@ -247,7 +247,7 @@ alembic downgrade -1
 - Use environment variables for sensitive data
 - Regularly update dependencies
 
-## 🚀 Deployment
+## Deployment
 
 ### Production Deployment
 
@@ -265,7 +265,7 @@ alembic downgrade -1
 - **File storage**: Use cloud storage (S3, GCS)
 - **CDN**: For static assets and videos
 
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
 2. Create a feature branch
@@ -273,11 +273,11 @@ alembic downgrade -1
 4. Add tests if applicable
 5. Submit a pull request
 
-## 📝 License
+## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-## 🆘 Troubleshooting
+## Troubleshooting
 
 ### Common Issues
 
@@ -306,7 +306,7 @@ docker-compose logs -f celery-worker
 docker-compose logs -f frontend
 ```
 
-## 📞 Support
+## Support
 
 For support and questions:
 - Create an issue on GitHub
