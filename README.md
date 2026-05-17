@@ -231,3 +231,5 @@ docker-compose logs -f frontend
 License
 
 # MIT License
+
+Built by Shridhi Gupta 
